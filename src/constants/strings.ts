@@ -7,6 +7,7 @@ const mail = "yangjiao4am@163.com";
 const universityMail = "ttxjy42@nottingham.ac.uk";
 const linkedinUrl = "https://www.linkedin.com/in/viola-yang-b395053a7";
 const instagramUrl = "https://www.instagram.com/violaaaaya";
+const og = `${url}/og.png`;
 const description = `${author} — Education professional and bilingual teaching assistant based in Nottingham, UK.`;
 const shortAbout =
   "Postgraduate student in Education Leadership and Management, with experience in language education and cross-cultural communication.";
@@ -21,6 +22,7 @@ export {
   instagramUrl,
   linkedinUrl,
   mail,
+  og,
   shortAbout,
   title,
   universityMail,

@@ -1,13 +1,13 @@
 import { instagramIcon, linkedinIcon } from "@/assets/icons/all-social";
 import { instagramUrl, linkedinUrl, mail, universityMail } from "@/constants/strings";
 
-const mailIcon = (
+const mailIconWhite = (
   <svg
     fill="none"
     viewBox="0 0 24 24"
     strokeWidth={1.5}
     stroke="currentColor"
-    className="w-6 h-6 text-dark dark:text-white"
+    className="w-6 h-6 text-white"
   >
     <path
       strokeLinecap="round"
@@ -21,14 +21,14 @@ const linksCards = [
   {
     title: "Email",
     href: `mailto:${mail}`,
-    className: "dark:bg-white p-3",
-    icon: mailIcon,
+    className: "!bg-neutral-600 dark:!bg-neutral-700 p-3",
+    icon: mailIconWhite,
   },
   {
     title: "University",
     href: `mailto:${universityMail}`,
     className: "!bg-teal-600 p-3",
-    icon: mailIcon,
+    icon: mailIconWhite,
   },
   {
     title: "LinkedIn",
