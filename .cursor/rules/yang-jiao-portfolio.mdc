@@ -1,0 +1,12 @@
+---
+description: Yang Jiao portfolio — education professional personal site
+globs: Yang Jiao Portfolio/**
+alwaysApply: false
+---
+
+# Yang Jiao Portfolio
+
+- **Profile:** Read `YJ_data.md` first. Never commit it.
+- **Remote:** https://github.com/Pukakiii/Yang-Jiao-Portfolio.git
+- **Person:** MSc Education student, teaching assistant — not a software developer.
+- **Adaptations:** Experience replaces app portfolio; skills are languages + teaching; tone is warm and professional.
