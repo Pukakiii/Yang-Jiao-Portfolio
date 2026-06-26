@@ -13,6 +13,7 @@ function AllAppsList() {
           <AppItem
             key={card.title}
             hideBottomBorder={index === webApps.length - 1}
+            hideLearnMore
             card={card}
           />
         ))}
