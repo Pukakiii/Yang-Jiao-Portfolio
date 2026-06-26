@@ -1,0 +1,6 @@
+.next/
+node_modules/
+.ship/
+*_data.md
+*_pp.jpeg
+*_pp.jpg
