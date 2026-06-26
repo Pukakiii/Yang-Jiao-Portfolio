@@ -1,7 +1,7 @@
 const author = "Yang Jiao";
 const title = "Yang Jiao";
 const username = "yangjiao";
-const host = "yang-jiao-portfolio.vercel.app";
+const host = "yang-jiao.vercel.app";
 const url = "https://" + host;
 const mail = "yangjiao4am@163.com";
 const universityMail = "ttxjy42@nottingham.ac.uk";
