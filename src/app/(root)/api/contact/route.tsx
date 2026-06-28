@@ -1,9 +1,37 @@
+import {
+  MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
+} from "@/constants/contact";
+import {
+  attachRateLimitCookie,
+  formatResetTime,
+  getRateLimit,
+  MAX_MESSAGES,
+  nextStateAfterSend,
+  rateLimitPayload,
+} from "@/lib/contact-rate-limit";
 import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+  const status = getRateLimit(request);
+  return NextResponse.json(rateLimitPayload(status));
+}
 
 export async function POST(request: Request) {
   try {
     if (!process.env.FORMSPREE_FORM_ID)
       throw "Contact form is not configured yet. Please email directly.";
+
+    const rateLimit = getRateLimit(request);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: `You've used your 2 messages for today. You can contact again at ${formatResetTime(rateLimit.resetAt!)}.`,
+          ...rateLimitPayload(rateLimit),
+        },
+        { status: 429 }
+      );
+    }
 
     const data = await request.json();
     const { name, email, message, recaptcha_token } = data;
@@ -22,7 +50,8 @@ export async function POST(request: Request) {
 
     if (
       name.trim().length > 300 ||
-      message.trim().length > 3000 ||
+      message.trim().length < MESSAGE_MIN_LENGTH ||
+      message.trim().length > MESSAGE_MAX_LENGTH ||
       (message.length > 14 && !message.includes(" "))
     )
       throw "Invalid message content";
@@ -49,7 +78,15 @@ export async function POST(request: Request) {
     if (!res.ok || !result.ok)
       throw result.error ?? result.message ?? "Failed to send message";
 
-    return NextResponse.json({ ok: true });
+    const newState = nextStateAfterSend(rateLimit);
+    const response = NextResponse.json({
+      ok: true,
+      remaining: Math.max(0, MAX_MESSAGES - newState.count),
+      resetAt: newState.resetAt,
+      blocked: newState.count >= 2,
+    });
+    attachRateLimitCookie(response, newState);
+    return response;
   } catch (error: any) {
     console.log("# contact error: ", error);
     return NextResponse.json(
