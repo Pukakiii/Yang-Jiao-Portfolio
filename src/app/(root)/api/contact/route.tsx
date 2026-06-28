@@ -1,14 +1,10 @@
-import { title } from "@/constants/strings";
-import ContactEmailTemplate from "@/shared/components/other/email-template";
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 
 export async function POST(request: Request) {
   try {
-    if (!process.env.RESEND_KEY)
+    if (!process.env.FORMSPREE_FORM_ID)
       throw "Contact form is not configured yet. Please email directly.";
 
-    const resend = new Resend(process.env.RESEND_KEY);
     const data = await request.json();
     const { name, email, message, recaptcha_token } = data;
     if (!name || !email || !message) throw "Invalid data, please try again!";
@@ -31,19 +27,29 @@ export async function POST(request: Request) {
     )
       throw "Invalid message content";
 
-    data.recaptcha_token = undefined;
+    const res = await fetch(
+      `https://formspree.io/f/${process.env.FORMSPREE_FORM_ID}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          _replyto: email,
+          _subject: `Portfolio contact from ${name}`,
+        }),
+      }
+    );
 
+    const result = await res.json();
+    if (!res.ok || !result.ok)
+      throw result.error ?? result.message ?? "Failed to send message";
 
-    const { renderToStaticMarkup } = await import("react-dom/server");
-    const emailHtml = renderToStaticMarkup(<ContactEmailTemplate {...data} />);
-    const res = await resend.emails.send({
-      subject: "Thank you for contacting me",
-      from: title + "<" + process.env.SENDER_EMAIL + ">",
-      to: [email],
-      bcc: process.env.FORWARD_EMAIL,
-      html: emailHtml,
-    });
-    return NextResponse.json(res.data);
+    return NextResponse.json({ ok: true });
   } catch (error: any) {
     console.log("# contact error: ", error);
     return NextResponse.json(

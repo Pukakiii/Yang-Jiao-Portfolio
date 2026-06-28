@@ -106,7 +106,7 @@ function ContactForm({
         body: JSON.stringify({ name, email, message, recaptcha_token }),
       });
       const data = await res.json();
-      if (!data.id)
+      if (!data.ok)
         throw {
           title: "Failed to send message",
           description: `${data.error ?? "Something went wrong"}`,
