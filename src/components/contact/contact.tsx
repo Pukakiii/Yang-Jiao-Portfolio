@@ -169,6 +169,29 @@ function ContactForm({
         </div>
         {alertDialog.alert}
       </form>
+      {hasRecaptcha && (
+        <p className="text-xs opacity-50 pt-2">
+          This site is protected by reCAPTCHA and the Google{" "}
+          <a
+            href="https://policies.google.com/privacy"
+            className="hover:underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Privacy Policy
+          </a>{" "}
+          and{" "}
+          <a
+            href="https://policies.google.com/terms"
+            className="hover:underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Terms of Service
+          </a>{" "}
+          apply.
+        </p>
+      )}
       <div className="py-3" />
       <LinksGridCard />
     </div>
