@@ -1,12 +1,25 @@
 ---
-description: Yang Jiao portfolio — education professional personal site
+description: Yang Jiao portfolio — manual development track
 globs: Yang Jiao Portfolio/**
 alwaysApply: false
 ---
 
 # Yang Jiao Portfolio
 
+## Track: manual
+
+- **No auto-ship:** excluded from `.ship/`, `manifest.json`, and cron shipping.
+- Commit directly to this repo; no staged slice copies from staging.
+
+## Project
+
 - **Profile:** Read `YJ_data.md` first. Never commit it.
 - **Remote:** https://github.com/Pukakiii/Yang-Jiao-Portfolio.git
+- **Reference (already adapted):** [KreatorDev/KreatorDev.com](https://github.com/KreatorDev/KreatorDev.com)
 - **Person:** MSc Education student, teaching assistant — not a software developer.
-- **Adaptations:** Experience replaces app portfolio; skills are languages + teaching; tone is warm and professional.
+
+## Adaptations
+
+- Experience replaces app portfolio; skills are languages + teaching
+- Tone is warm and professional
+- Nav: Home, About, Experience, Contact (no Blog)
