@@ -8,6 +8,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const outDir = path.join(root, "public/images/flowers");
 
+/** Max longest edge — 2× display cap (720px) for retina, keeps repo lean. */
+const MAX_LONG_EDGE = 1440;
+
 const SOURCES = [
   {
     input: "evie-s-vz3IQy0LOaA-unsplash.jpg",
@@ -157,8 +160,33 @@ async function main() {
     const outPath = path.join(outDir, output);
     const processed = await removeWhiteBackground(inputPath);
     const meta = await processed.metadata();
-    await processed.png({ compressionLevel: 9 }).toFile(outPath);
-    console.log(`wrote ${outPath} (${meta.width}x${meta.height})`);
+
+    const longEdge = Math.max(meta.width, meta.height);
+    const resizeOpts =
+      longEdge > MAX_LONG_EDGE
+        ? meta.width >= meta.height
+          ? { width: MAX_LONG_EDGE }
+          : { height: MAX_LONG_EDGE }
+        : {};
+
+    const resized = processed.resize({
+      ...resizeOpts,
+      fit: "inside",
+      withoutEnlargement: true,
+    });
+
+    const outMeta = await resized.metadata();
+    await resized
+      .png({ compressionLevel: 9, palette: true, effort: 10 })
+      .toFile(outPath);
+    console.log(
+      `wrote ${outPath} (${outMeta.width}x${outMeta.height}, ${Math.round(fs.statSync(outPath).size / 1024)}KB)`,
+    );
+
+    paletteReport[`${page}_dimensions`] = {
+      nativeWidth: outMeta.width,
+      nativeHeight: outMeta.height,
+    };
   }
 
   if (Object.keys(paletteReport).length) {
