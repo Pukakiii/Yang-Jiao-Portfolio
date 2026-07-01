@@ -47,3 +47,13 @@ next-env.d.ts
 
 # Shipping machinery (local only)
 .ship/
+
+# Flower assets — generated locally via npm run flowers:process
+public/images/flowers/*.png
+*-unsplash.jpg
+header_flower*.jpg
+footer_flowers.jpg
+
+# Local tooling
+.claude/
+content

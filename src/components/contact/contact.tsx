@@ -333,7 +333,7 @@ function TextInput(props: any) {
       )}
       <label
         className={
-          'input-label absolute pointer-events-none text-xs top-[-10px] left-3 border-0 bg-white dark:bg-dark w-fit px-0.5 rounded-md'
+          'input-label absolute pointer-events-none text-xs top-[-10px] left-3 border-0 bg-white/88 dark:bg-dark/88 w-fit px-0.5 rounded-md'
         }>
         {props.label}
       </label>

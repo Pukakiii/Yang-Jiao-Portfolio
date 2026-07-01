@@ -1,3 +1,4 @@
+import FloralBackdrop from "@/components/floral/floral-backdrop";
 import Providers from "@/lib/provider";
 import rootMetadata from "@/metadata/root";
 import Footer from "@/shared/components/footer";
@@ -7,32 +8,7 @@ import "./../globals.css";
 
 export const metadata = rootMetadata;
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={
-          font.className +
-          " w-full h-full bg-lighter dark:bg-darker min-h-screen flex flex-col justify-center items-center max-w-3xl m-auto px-4 xs:px-10"
-        }
-      >
-        <Providers>
-          <Header />
-          <main className="h-full w-full justify-center items-center m-auto py-4 xs:py-10">
-            {children}
-          </main>
-          <Footer />
-        </Providers>
-      </body>
-    </html>
-  );
-}
-
-export const font = localFont({
+const font = localFont({
   src: [
     {
       path: "../../../public/fonts/chirp/regular.woff",
@@ -58,3 +34,26 @@ export const font = localFont({
   //   preload: true,
   weight: "400 500 700 900",
 });
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={font.className + " relative min-h-screen"}>
+        <Providers>
+          <FloralBackdrop />
+          <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 xs:px-10">
+            <Header />
+            <main className="h-full w-full justify-center items-center m-auto py-4 xs:py-10">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </Providers>
+      </body>
+    </html>
+  );
+}

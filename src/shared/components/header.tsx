@@ -26,7 +26,7 @@ function Header() {
   );
 
   const btnStyle =
-    "py-4 px-6 sm:py-[8px] sm:px-4 dark:hover:bg-neutral-800 hover:bg-neutral-200/70 dark:hover:text-white hover:text-black rounded-full ";
+    "py-4 px-6 sm:py-[8px] sm:px-4 hover:bg-neutral-200/70 hover:text-black rounded-full ";
   const items = AppPaths.main.map((card) => {
     const isSelected = path === card.path;
     return (
@@ -43,7 +43,7 @@ function Header() {
           className={
             btnStyle +
             "text-base font-normal min-w-[200px] sm:min-w-0 text-start " +
-            (isSelected ? "text-black dark:text-white" : "")
+            (isSelected ? "text-black" : "")
           }
         >
           {card.name}
@@ -54,18 +54,23 @@ function Header() {
 
   const dropDown = useDropDownMenu({
     menu: (
-      <div className={cardStyle + "px-3 py-4 justify-start shadow-md"}>
+      <div
+        className={
+          cardStyle +
+          "!bg-white/85 backdrop-blur-md backdrop-saturate-150 px-3 py-4 justify-start shadow-md"
+        }
+      >
         {items}
       </div>
     ),
   });
 
   return (
-    <header className="w-full sticky top-0 !z-50 bg-lighter dark:bg-darker rounded-b-3xl sm:backdrop-blur-md sm:!bg-opacity-90 pt-5 mt-4">
+    <header className="sticky top-0 z-50 w-full overflow-hidden rounded-3xl border border-neutral-400/10 bg-white/50 pt-5 backdrop-blur-md backdrop-saturate-150">
       <div
         className={
           cardStyle +
-          "!p-1 !flex-row items-center justify-between rounded-3xl w-full text-sm text-neutral-500 text-center !px-1.5"
+          "!bg-white/85 !p-1 !flex-row items-center justify-between rounded-3xl w-full text-sm text-neutral-500 text-center !px-1.5"
         }
       >
         <div className="hidden sm:flex flex-wrap items-center w-full">
@@ -77,7 +82,7 @@ function Header() {
             className={btnStyle + "flex sm:hidden !py-1.5 !px-4"}
           >
             <MenuIcon
-              className="w-7 h-7 text-dark dark:text-neutral-200"
+              className="w-7 h-7 text-dark"
               strokeWidth={2}
             />
           </button>
