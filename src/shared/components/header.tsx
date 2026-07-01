@@ -8,87 +8,89 @@ import { useEffect, useState } from "react";
 import useAppPathname from "../hooks/pathname";
 import cardStyle from "../styles/card";
 import { scrollToTop } from "../utils/window";
-import useDropDownMenu from "./dropdowns/menu";
 
 function Header() {
   const pathname = useAppPathname();
   const [path, setPath] = useState(pathname);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     setPath(pathname);
   }, [pathname]);
 
-  const themeSwitcher = (
-    <ThemeSwitcher
-      className="hover:animate-none !w-[80px]"
-      thumbClassName="h-7 w-7"
-    />
-  );
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
-  const btnStyle =
-    "py-4 px-6 sm:py-[8px] sm:px-4 hover:bg-neutral-200/70 hover:text-black rounded-full ";
-  const items = AppPaths.main.map((card) => {
-    const isSelected = path === card.path;
-    return (
-      <Link
-        key={card.name}
-        onClick={() => {
-          scrollToTop();
-          setPath(card.path);
-          if (dropDown.isOpen) dropDown.setOpen(false);
-        }}
-        href={card.path}
-      >
-        <div
-          className={
-            btnStyle +
-            "text-base font-normal min-w-[200px] sm:min-w-0 text-start " +
-            (isSelected ? "text-black" : "")
-          }
+  const closeMenu = () => setMenuOpen(false);
+
+  const navLinkClass = (isSelected: boolean, mobile: boolean) =>
+    [
+      mobile
+        ? "block w-full rounded-2xl px-4 py-3.5 text-base font-normal text-left transition-colors"
+        : "py-[8px] px-4 text-base font-normal rounded-full transition-colors",
+      isSelected
+        ? "bg-neutral-200/80 text-black font-medium"
+        : "text-neutral-600 hover:bg-neutral-200/70 hover:text-black",
+    ].join(" ");
+
+  const renderNavLinks = (mobile: boolean) =>
+    AppPaths.main.map((card) => {
+      const isSelected = path === card.path;
+      return (
+        <Link
+          key={`${mobile ? "mobile" : "desktop"}-${card.path}`}
+          href={card.path}
+          onClick={() => {
+            scrollToTop();
+            setPath(card.path);
+            if (mobile) closeMenu();
+          }}
         >
-          {card.name}
-        </div>
-      </Link>
-    );
-  });
-
-  const dropDown = useDropDownMenu({
-    menu: (
-      <div
-        className={
-          cardStyle +
-          "!bg-white/85 backdrop-blur-md backdrop-saturate-150 px-3 py-4 justify-start shadow-md"
-        }
-      >
-        {items}
-      </div>
-    ),
-  });
+          <span className={navLinkClass(isSelected, mobile)}>{card.name}</span>
+        </Link>
+      );
+    });
 
   return (
-    <header className="sticky top-0 z-50 w-full overflow-hidden rounded-3xl border border-neutral-400/10 bg-white/50 pt-5 backdrop-blur-md backdrop-saturate-150">
-      <div
-        className={
-          cardStyle +
-          "!bg-white/85 !p-1 !flex-row items-center justify-between rounded-3xl w-full text-sm text-neutral-500 text-center !px-1.5"
-        }
-      >
-        <div className="hidden sm:flex flex-wrap items-center w-full">
-          {items}
-        </div>
-        <div>
+    <header className="sticky top-0 z-50 w-full pt-5">
+      <div className="overflow-visible rounded-3xl border border-neutral-400/10 bg-white shadow-sm">
+        <div
+          className={
+            cardStyle +
+            "!bg-white !p-1.5 !flex-row items-center justify-between rounded-3xl w-full text-sm !px-2 !border-0"
+          }
+        >
+          <nav className="hidden sm:flex flex-wrap items-center gap-0.5">
+            {renderNavLinks(false)}
+          </nav>
+
           <button
-            onClick={() => dropDown.setOpen(!dropDown.isOpen)}
-            className={btnStyle + "flex sm:hidden !py-1.5 !px-4"}
+            type="button"
+            className="flex rounded-full p-2 hover:bg-neutral-200/70 sm:hidden"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-expanded={menuOpen}
+            aria-label={
+              menuOpen ? "Close navigation menu" : "Open navigation menu"
+            }
           >
-            <MenuIcon
-              className="w-7 h-7 text-dark"
-              strokeWidth={2}
-            />
+            <MenuIcon className="h-7 w-7 text-dark" strokeWidth={2} />
           </button>
-          <div className="sm:hidden">{dropDown.dropdown}</div>
+
+          <ThemeSwitcher
+            className="hover:animate-none !w-[80px]"
+            thumbClassName="h-7 w-7"
+          />
         </div>
-        {themeSwitcher}
+
+        {menuOpen && (
+          <nav
+            className="mx-1.5 mb-1.5 mt-1 flex flex-col gap-1 border-t border-neutral-200/80 pt-1 sm:hidden"
+            aria-label="Mobile navigation"
+          >
+            {renderNavLinks(true)}
+          </nav>
+        )}
       </div>
     </header>
   );
